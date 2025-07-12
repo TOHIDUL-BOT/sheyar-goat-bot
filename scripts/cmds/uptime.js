@@ -1,84 +1,116 @@
-const axios = require('axios');
-const { createCanvas, loadImage } = require('canvas');
-const fs = require('fs');
-const path = require('path');
+const axios = require("axios");
+const fs = require("fs");
+const path = require("path");
 
-async function checkAuthor(authorName) {
-  try {
-    const response = await axios.get('https://author-check.vercel.app/name');
-    const apiAuthor = response.data.name;
-    return apiAuthor === authorName;
-  } catch (error) {
-    console.error("Error checking author:", error);
-    return false;
-  }
+const monitorFile = path.join(__dirname, "monitor.json");
+if (!fs.existsSync(monitorFile)) fs.writeFileSync(monitorFile, JSON.stringify({}));
+
+function loadMonitors() {
+  return JSON.parse(fs.readFileSync(monitorFile, "utf8"));
 }
+
+function saveMonitors(data) {
+  fs.writeFileSync(monitorFile, JSON.stringify(data, null, 2));
+}
+
+// প্রতি ৫ মিনিটে মনিটর করা সাইট চেক করবে
+setInterval(async () => {
+  const monitors = loadMonitors();
+  for (const [uid, info] of Object.entries(monitors)) {
+    try {
+      await axios.get(info.url, { timeout: 10000 });
+      if (!info.up) {
+        monitors[uid].up = true;
+        saveMonitors(monitors);
+      }
+    } catch {
+      if (info.up) {
+        info.api.sendMessage(
+          {
+            body: `🔴 𝐔𝐩𝐭𝐢𝐦𝐞 𝐀𝐥𝐞𝐫𝐭:\nYour site seems **down** now:\n➤ ${info.url}`,
+            mentions: [{ id: uid, tag: info.name }]
+          },
+          info.threadID
+        );
+        monitors[uid].up = false;
+        saveMonitors(monitors);
+      }
+    }
+  }
+}, 5 * 60 * 1000);
 
 module.exports = {
   config: {
     name: "uptime",
-    aliases: [],
-    version: "1.0",
-    author: "Vex_Kshitiz",
-    shortDescription: "Get bot stats",
-    longDescription: "Get a bot stats",
-    category: "utility",
-    guide: {
-      en: "{p}botstats"
-    }
+    aliases: ["upt"], 
+    version: "1.2",
+    author: "Kawsar",
+    cooldowns: 3,
+    description: { en: "Monitor URL or show bot uptime" },
+    category: "Utilities",
+    guide: { en: "{pn} [url|status]" }
   },
-  onStart: async function ({ message, event, args, api }) {
 
-    
-    // here add your bot uptime url of render or any other  platform👇
-    
-    const url = 'https://goatbot-gupta.onrender.com'; 
+  onStart: async function ({ api, event, args }) {
+    const { senderID, threadID } = event;
+    const monitors = loadMonitors();
 
-    try {
-      const isAuthorValid = await checkAuthor(module.exports.config.author);
-      if (!isAuthorValid) {
-        await message.reply("Author changer alert! this cmd belongs to Vex_Kshitiz.");
-        return;
-      }
+    // যদি args না থাকে → uptime দেখাবে
+    if (args.length === 0) {
+      const uptime = Math.floor(process.uptime());
+      const days = Math.floor(uptime / 86400);
+      const hours = Math.floor((uptime % 86400) / 3600);
+      const minutes = Math.floor((uptime % 3600) / 60);
+      const seconds = uptime % 60;
 
-      const response = await axios.get(`https://screen-shot-pi.vercel.app/ss?url=${url}/stats`, { responseType: 'arraybuffer' });
-      const imageData = response.data;
+      let uptimeFormatted = `⏳ ${days}d ${hours}h ${minutes}m ${seconds}s`;
+      if (days === 0) uptimeFormatted = `⏳ ${hours}h ${minutes}m ${seconds}s`;
+      if (hours === 0) uptimeFormatted = `⏳ ${minutes}m ${seconds}s`;
+      if (minutes === 0) uptimeFormatted = `⏳ ${seconds}s`;
 
-      const cacheFolderPath = path.join(__dirname, 'cache');
-      if (!fs.existsSync(cacheFolderPath)) {
-        fs.mkdirSync(cacheFolderPath);
-      }
-      const imagePath = path.join(cacheFolderPath, 'botstats.jpg');
-      fs.writeFileSync(imagePath, imageData);
-
-      const crop = {
-        top: 55,
-        bottom: 60,
-        left: 0,
-        right: 100
-      };
-
-      const image = await loadImage(imagePath);
-
-      const canvas = createCanvas(image.width - crop.left - crop.right, image.height - crop.top - crop.bottom);
-      const ctx = canvas.getContext('2d');
-
-      ctx.drawImage(image, crop.left, crop.top, canvas.width, canvas.height, 0, 0, canvas.width, canvas.height);
-
-      const croppedImagePath = path.join(cacheFolderPath, 'botstats.jpg');
-      const out = fs.createWriteStream(croppedImagePath);
-      const stream = canvas.createJPEGStream();
-      stream.pipe(out);
-
-      out.on('finish', () => {
-        message.reply({
-          body: "",
-          attachment: fs.createReadStream(croppedImagePath)
-        });
-      });
-    } catch (error) {
-      console.error("Error:", error);
-      message.reply("❌ | An error occurred. please check your url is correct or not");
+      return api.sendMessage(`🕒 Bot Uptime:\n${uptimeFormatted}`, threadID);
     }
+
+    // যদি args[0] == "status" → মনিটর করা URL এর অবস্থা দেখাবে
+    if (args[0] === "status") {
+      if (!monitors[senderID])
+        return api.sendMessage("⚠️ | তোমার জন্য কোনো সাইট মনিটর করা হয়নি!", threadID);
+    
+      const info = monitors[senderID];
+      const status = info.up ? "🟢 Online" : "🔴 Down";
+    
+      const lastCheck = info.lastCheck
+        ? new Date(info.lastCheck).toLocaleString("en-US", { timeZone: "Asia/Dhaka" })
+        : "N/A";
+    
+      return api.sendMessage(
+        `📡 Monitoring Status:
+    ➤ URL: ${info.url}
+    ➤ Status: ${status}
+    🕓 Last Checked: ${lastCheck}`,
+        threadID
+      );
+    }
+    
+
+    // অন্যথায় args[0] কে URL ধরে মনিটরিং শুরু করবে
+    const url = args[0];
+    if (!url.startsWith("http"))
+      return api.sendMessage("⚠️ | সঠিক URL দিতে হবে, যেমন http://example.com", threadID);
+
+    monitors[senderID] = {
+      url,
+      up: true,
+      name: event.senderName || "User",
+      threadID,
+      api
+    };
+
+    saveMonitors(monitors);
+
+    return api.sendMessage(
+      `✅ | মনিটর শুরু হলো:\n➤ ${url}\n\n⏱ ডাউন হলে জানানো হবে।`,
+      threadID
+    );
   }
 };

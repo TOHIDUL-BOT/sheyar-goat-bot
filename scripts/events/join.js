@@ -4,10 +4,10 @@ module.exports = { config: { name: "welcome", version: "1.7", author: "NTKhang",
 
 langs: {
             en: {
-                    welcomeMessage: "{inviter} thanks\nnow i am a bot,,,,,my prefix: {prefix}",
+                    welcomeMessage: "{inviter} thanks\n\nnow i am a bot,,,,,my prefix: {prefix}",
                     multiple1: "you",
                     multiple2: "you guys",
-                    defaultWelcomeMessage: `↗↗↗ 𝐉𝐎𝐈𝐍 𝐀𝐋𝐄𝐑𝐓 ↗↗↗\n\n➢ Name: {userNameTag}\n➢ Time: {time}`
+                    defaultWelcomeMessage: `✅ ||⇨ 𝐉𝐎𝐈𝐍 𝐀𝐋𝐄𝐑𝐓 ⇦|| ✅\n\n||⇨ 𝐍𝐚𝐦𝐞: {userNameTag}\n||⇨ 𝐓𝐢𝐦𝐞: {time}`
             }
     },
 
@@ -19,7 +19,7 @@ langs: {
                     const dataAddedParticipants = event.logMessageData.addedParticipants;
                     const hours = getTime("HH");
                     const mins = getTime("mm");
-                    const ampm = hours >= 12 ? 'PM' : 'AM';
+                    const ampm = hours >= 12 ? '𝐏𝐌' : '𝐀𝐌';
                     const time = `${((+hours % 12) || 12)}:${mins} ${ampm}`;
 
                     if (dataAddedParticipants.some((item) => item.userFbId == api.getCurrentUserID())) {
