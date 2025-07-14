@@ -12,14 +12,13 @@ module.exports = {
 	config: {
 		name: "ytb",
 		version: "1.1.4",
-		aliases: ['youtube'],
 		author: "dipto",
 		countDown: 5,
 		role: 0,
 		description: {
 			en: "Download video, audio, and info from YouTube"
 		},
-		category: "media",
+		category: "song",
 		guide: {
 			en: "  {pn} [video|-v] [<video name>|<video link>]: use to download video from YouTube."
 				+ "\n   {pn} [audio|-a] [<video name>|<video link>]: use to download audio from YouTube"

@@ -12,14 +12,13 @@ module.exports = {
         config: {
                 name: "music",
                 version: "1.1.5",
-                aliases: ['youtube'],
-                author: "dipto",
+                author: "kawsar",
                 countDown: 5,
                 role: 0,
                 description: {
                         en: "Download video, audio, and info from YouTube"
                 },
-                category: "media",
+                category: "song",
                 guide: {
                         en: "  {pn} -v <link or keyword>: Download video\n"
                            + "{pn} -a <link or keyword>: Download audio\n"

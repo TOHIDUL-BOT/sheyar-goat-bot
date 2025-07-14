@@ -1,116 +1,81 @@
 const axios = require("axios");
-const fs = require("fs");
-const path = require("path");
-
-const monitorFile = path.join(__dirname, "monitor.json");
-if (!fs.existsSync(monitorFile)) fs.writeFileSync(monitorFile, JSON.stringify({}));
-
-function loadMonitors() {
-  return JSON.parse(fs.readFileSync(monitorFile, "utf8"));
-}
-
-function saveMonitors(data) {
-  fs.writeFileSync(monitorFile, JSON.stringify(data, null, 2));
-}
-
-// প্রতি ৫ মিনিটে মনিটর করা সাইট চেক করবে
-setInterval(async () => {
-  const monitors = loadMonitors();
-  for (const [uid, info] of Object.entries(monitors)) {
-    try {
-      await axios.get(info.url, { timeout: 10000 });
-      if (!info.up) {
-        monitors[uid].up = true;
-        saveMonitors(monitors);
-      }
-    } catch {
-      if (info.up) {
-        info.api.sendMessage(
-          {
-            body: `🔴 𝐔𝐩𝐭𝐢𝐦𝐞 𝐀𝐥𝐞𝐫𝐭:\nYour site seems **down** now:\n➤ ${info.url}`,
-            mentions: [{ id: uid, tag: info.name }]
-          },
-          info.threadID
-        );
-        monitors[uid].up = false;
-        saveMonitors(monitors);
-      }
-    }
-  }
-}, 5 * 60 * 1000);
+const moment = require("moment");
 
 module.exports = {
-  config: {
-    name: "uptime",
-    aliases: ["upt"], 
-    version: "1.2",
-    author: "Kawsar",
-    cooldowns: 3,
-    description: { en: "Monitor URL or show bot uptime" },
-    category: "Utilities",
-    guide: { en: "{pn} [url|status]" }
-  },
+config: {
+name: "uptime",
+aliases: ["upt"],
+version: "1.2",
+author: "Kawsar",
+cooldowns: 3,
+description: { en: "Shows bot uptime & auto-pings host to keep alive" },
+category: "system",
+guide: { en: "{pn} [status]" }
+},
 
-  onStart: async function ({ api, event, args }) {
-    const { senderID, threadID } = event;
-    const monitors = loadMonitors();
+// বট অন হলে চালু হবে — host link auto-ping system
+onLoad: async function ({ api }) {
+const { config } = global.GoatBot;
 
-    // যদি args না থাকে → uptime দেখাবে
-    if (args.length === 0) {
-      const uptime = Math.floor(process.uptime());
-      const days = Math.floor(uptime / 86400);
-      const hours = Math.floor((uptime % 86400) / 3600);
-      const minutes = Math.floor((uptime % 3600) / 60);
-      const seconds = uptime % 60;
+// ✅ Host URL detect (RENDER, REPLIT, GLITCH etc.)  
+let hostURL = config.autoUptime?.url ||  
+  (process.env.REPL_OWNER  
+    ? `https://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co`  
+    : process.env.RENDER_EXTERNAL_URL ||  
+      (process.env.PROJECT_DOMAIN ? `https://${process.env.PROJECT_DOMAIN}.glitch.me` : null));  
 
-      let uptimeFormatted = `⏳ ${days}d ${hours}h ${minutes}m ${seconds}s`;
-      if (days === 0) uptimeFormatted = `⏳ ${hours}h ${minutes}m ${seconds}s`;
-      if (hours === 0) uptimeFormatted = `⏳ ${minutes}m ${seconds}s`;
-      if (minutes === 0) uptimeFormatted = `⏳ ${seconds}s`;
+if (!hostURL) {  
+  console.log("[UPTIME] ❌ Host URL not detected, auto-ping disabled.");  
+  return;  
+}  
 
-      return api.sendMessage(`🕒 Bot Uptime:\n${uptimeFormatted}`, threadID);
-    }
+if (!hostURL.startsWith("http")) hostURL = "https://" + hostURL;  
+hostURL += "/uptime"; // append uptime path  
 
-    // যদি args[0] == "status" → মনিটর করা URL এর অবস্থা দেখাবে
-    if (args[0] === "status") {
-      if (!monitors[senderID])
-        return api.sendMessage("⚠️ | তোমার জন্য কোনো সাইট মনিটর করা হয়নি!", threadID);
-    
-      const info = monitors[senderID];
-      const status = info.up ? "🟢 Online" : "🔴 Down";
-    
-      const lastCheck = info.lastCheck
-        ? new Date(info.lastCheck).toLocaleString("en-US", { timeZone: "Asia/Dhaka" })
-        : "N/A";
-    
-      return api.sendMessage(
-        `📡 Monitoring Status:
-    ➤ URL: ${info.url}
-    ➤ Status: ${status}
-    🕓 Last Checked: ${lastCheck}`,
-        threadID
-      );
-    }
-    
+console.log(`[UPTIME] ✅ Auto ping started: ${hostURL}`);  
 
-    // অন্যথায় args[0] কে URL ধরে মনিটরিং শুরু করবে
-    const url = args[0];
-    if (!url.startsWith("http"))
-      return api.sendMessage("⚠️ | সঠিক URL দিতে হবে, যেমন http://example.com", threadID);
+let lastStatus = "ok";  
 
-    monitors[senderID] = {
-      url,
-      up: true,
-      name: event.senderName || "User",
-      threadID,
-      api
-    };
+setInterval(async () => {  
+  try {  
+    await axios.get(hostURL, { timeout: 10000 });  
+    if (lastStatus !== "ok") {  
+      lastStatus = "ok";  
+      console.log("[UPTIME] ✅ Back online");  
+    }  
+  } catch (err) {  
+    if (lastStatus !== "fail") {  
+      lastStatus = "fail";  
+      console.log("[UPTIME] ❌ Ping failed");  
 
-    saveMonitors(monitors);
+      const admins = global.GoatBot.config.adminBot || [];  
+      for (const adminID of admins) {  
+        api.sendMessage(  
+          `🚨 𝐔𝐏𝐓𝐈𝐌𝐄 𝐀𝐋𝐄𝐑𝐓:\nYour bot host seems 🔴 **DOWN**!\n➤ ${hostURL}\n⏱️ Time: ${moment().format("YYYY-MM-DD HH:mm:ss")}`,  
+          adminID  
+        );  
+      }  
+    }  
+  }  
+}, 1000 * 60 * 5); // প্রতি ৫ মিনিটে ping
 
-    return api.sendMessage(
-      `✅ | মনিটর শুরু হলো:\n➤ ${url}\n\n⏱ ডাউন হলে জানানো হবে।`,
-      threadID
-    );
-  }
+},
+
+// যখন কেউ /uptime কমান্ড চালাবে
+onStart: async function ({ message, args }) {
+// ✅ Bot uptime in seconds
+const uptime = Math.floor(process.uptime());
+const days = Math.floor(uptime / 86400);
+const hours = Math.floor((uptime % 86400) / 3600);
+const minutes = Math.floor((uptime % 3600) / 60);
+const seconds = uptime % 60;
+
+let uptimeFormatted = `⏳ ${days}d ${hours}h ${minutes}m ${seconds}s`;  
+if (days === 0) uptimeFormatted = `⏳ ${hours}h ${minutes}m ${seconds}s`;  
+if (hours === 0) uptimeFormatted = `⏳ ${minutes}m ${seconds}s`;  
+if (minutes === 0) uptimeFormatted = ` ${seconds}s`;  
+
+return message.reply(` 𝗕𝗼𝘁 𝗨𝗽𝘁𝗶𝗺𝗲:${uptimeFormatted}`);
+
+}
 };

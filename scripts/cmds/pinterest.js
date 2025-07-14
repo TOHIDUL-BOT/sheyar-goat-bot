@@ -3,8 +3,7 @@ const path = require("path");
 
 module.exports = {
   config: {
-    name: "pin",
-    aliases: ["pinterest"],
+    name: "pinterest",
     version: "1.0",
     author: "حسين يعقوبي",
     role: 0,
@@ -12,7 +11,7 @@ module.exports = {
     longDescription: {
       en: "This command allows you to search for images on Pinterest based on a specific query and retrieve a certain number of images."
     },
-    category: "media",
+    category: "picture",
     guide: {
       en: "{pn} cat - 6: {pn} Cat"
     }

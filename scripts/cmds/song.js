@@ -11,12 +11,11 @@ const fetchApis = async () => {
 
 module.exports.config = {
   name: "song",
-  aliases: ["songs", "musics"],
   version: "1.6.9",
   author: "Nazrul",
   role: 0,
   countDown: 9,
-  category: "media",
+  category: "song",
   guide: { en: "{pn} [song name] or reply with a link" }
 };
 

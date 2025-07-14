@@ -52,7 +52,7 @@ module.exports = {
   "valo ekta dalal suggest koren to",
   "shala abal",
   "Biye korbi 😐",
-  "Chup kor bou peye gechi 🤪",
+  "arash maras naki love maras.?",
   "mamar bari giyechilam 🙂",
   "Abar arekbar bot bol 🙄",
   "Babu amar dimag gorom 😐",
@@ -64,7 +64,7 @@ module.exports = {
   "🤔",
   "Systemmmmmmm 😴",
   "Moye moye moye moye🙆🏻‍♀🙆🏻‍♀",
-  "Ye dukh kahe khatm nahi hota 🙁",
+  "পুটকি সবাই চুলকায় দোষ পড়ে ফুচকা ওয়ালার..।😑",
   "Tum to dokebaz ho",
   "you just looking like a wow😶",
   "keya be",
@@ -102,7 +102,8 @@ module.exports = {
   "haa meri jaan",
   "Agye Phirse Bot Bot Krne🙄",
   "konse color ki jacket pehne ho umm btao na😚",
-  "dhann khachh booyaah"
+  "dhann khachh booyaah",
+  "I love cooking, So i cooked my Life"
     ];
 
     const rand = Messages[Math.floor(Math.random() * Messages.length)];

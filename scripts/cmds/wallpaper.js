@@ -4,7 +4,6 @@ const path = require("path");
 module.exports = {
   config: {
     name: "wallpaper",
-    aliases: ["wl"],
     version: "1.1",
     author: "Samir Œ",
     countDown: 5,
@@ -13,9 +12,9 @@ module.exports = {
       en: "get wallpaper"
     },
     longDescription: {
-      en: "get wallpaper"
+      en: "[p] wallpaper [prompt]  bot send you wallpaper"
     },
-    category: "tools",
+    category: "picture",
     guide: {
       en: ""
     }
