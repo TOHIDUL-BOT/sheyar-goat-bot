@@ -1,5 +1,6 @@
 const { spawn } = require("child_process");
 const fs = require("fs");
+const path = require("path");
 
 module.exports = {
   config: {
@@ -12,7 +13,7 @@ module.exports = {
     guide: { en: "{pn} <YouTube URL>" }
   },
 
-  onStart: async function ({ message, args, api, event }) {
+  onStart: async function ({ message, args }) {
     const url = args[0];
     if (!url || !url.includes("youtu")) {
       return message.reply("❌ | Please provide a valid YouTube URL.");
@@ -30,7 +31,7 @@ module.exports = {
         return message.reply(`❌ | Error downloading audio:\n${stderr}`);
       }
 
-      const filePath = stdout.trim();
+      const filePath = path.resolve(stdout.trim());
 
       if (!fs.existsSync(filePath)) {
         return message.reply("❌ | File not found.");
