@@ -213,37 +213,7 @@ module.exports = function (api, threadModel, userModel, dashBoardModel, globalMo
 		let isUserCallCommand = false;
 		async function onStart() {
 			// —————————————— CHECK USE BOT —————————————— //
-		//	if (!body || !body.startsWith(prefix))
-
-
-           const prefix = global.GoatBot.config.prefix;
-           const body = (event.body || "").trim();
-           if (!body) return;
-           
-           // command name খুঁজে বের করো (prefix থাকলে কাটবে, না থাকলে সরাসরি)
-           const commandName = body.startsWith(prefix)
-             ? body.slice(prefix.length).split(" ")[0].toLowerCase()
-             : body.split(" ")[0].toLowerCase();
-           
-           // command খুঁজে বের করো
-           const command = global.GoatBot.commands.get(commandName);
-           if (!command) return;
-           
-           // check করো usePrefix কীভাবে behave করবে
-           const usePrefix = command.config?.usePrefix;
-           const isPrefixed = body.startsWith(prefix);
-           
-           // যদি usePrefix true বা undefined হয়, আর prefix না থাকে → return
-           if (usePrefix !== false && !isPrefixed) return;
-
-
-
-
-
-
-
-
-
+			if (!body || !body.startsWith(prefix))
 				return;
 			const dateNow = Date.now();
 			const args = body.slice(prefix.length).trim().split(/ +/);
