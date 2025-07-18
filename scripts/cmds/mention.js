@@ -11,7 +11,7 @@ module.exports = {
  longDescription: {
  en: "Mention a user using their name",
  },
- category: "tools",
+ category: "group",
  guide: {
  en: "{p}mention <name> [text]",
  },
@@ -40,14 +40,14 @@ module.exports = {
  return message.reply(`No user found with the name "${nameArg}".`);
  }
 
- const user = searchResults[0]; 
- id = user.userID; 
+ const user = searchResults[0];
+ id = user.userID;
  text = args.slice(nameArg.split(" ").length).join(" ");
  } else if (messageReply && messageReply.senderID) {
- id = parseInt(messageReply.senderID); 
+ id = parseInt(messageReply.senderID);
  text = args.join(" ");
  } else {
- id = parseInt(senderID); 
+ id = parseInt(senderID);
  text = args.join(" ");
  }
 
@@ -71,4 +71,3 @@ module.exports = {
  message.reply("Error while mentioning the user. Please try again later.");
  }
  },
-};

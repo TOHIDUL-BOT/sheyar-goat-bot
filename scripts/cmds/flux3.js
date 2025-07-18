@@ -7,7 +7,7 @@ module.exports = {
         name: "flux3",
         version: "1.0",
         author: "Team Calyx",
-        category: "𝗔𝗜",
+        category: "𝗜𝗠𝗔𝗚𝗘 𝗚𝗘𝗡𝗘𝗥𝗔𝗧𝗢𝗥",
         countDown: 5,
         shortDescription: "Generate an image",
         longDescription: "Generates an image based on the provided prompt.",

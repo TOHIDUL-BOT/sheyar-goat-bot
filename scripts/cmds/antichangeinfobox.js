@@ -13,11 +13,6 @@ module.exports = {
 		},
 		category: "box chat",
 		guide: {
-			vi: "   {pn} avt [on | off]: chống đổi avatar box chat"
-				+ "\n   {pn} name [on | off]: chống đổi tên box chat"
-				+ "\n   {pn} nickname [on | off]: chống đổi nickname trong box chat"
-				+ "\n   {pn} theme [on | off]: chống đổi theme (chủ đề) box chat"
-				+ "\n   {pn} emoji [on | off]: chống đổi trạng emoji box chat",
 			en: "   {pn} avt [on | off]: anti change avatar box chat"
 				+ "\n   {pn} name [on | off]: anti change name box chat"
 				+ "\n   {pn} nickname [on | off]: anti change nickname in box chat"
@@ -27,25 +22,6 @@ module.exports = {
 	},
 
 	langs: {
-		vi: {
-			antiChangeAvatarOn: "Đã bật chức năng chống đổi avatar box chat",
-			antiChangeAvatarOff: "Đã tắt chức năng chống đổi avatar box chat",
-			missingAvt: "Bạn chưa đặt avatar cho box chat",
-			antiChangeNameOn: "Đã bật chức năng chống đổi tên box chat",
-			antiChangeNameOff: "Đã tắt chức năng chống đổi tên box chat",
-			antiChangeNicknameOn: "Đã bật chức năng chống đổi nickname box chat",
-			antiChangeNicknameOff: "Đã tắt chức năng chống đổi nickname box chat",
-			antiChangeThemeOn: "Đã bật chức năng chống đổi theme (chủ đề) box chat",
-			antiChangeThemeOff: "Đã tắt chức năng chống đổi theme (chủ đề) box chat",
-			antiChangeEmojiOn: "Đã bật chức năng chống đổi emoji box chat",
-			antiChangeEmojiOff: "Đã tắt chức năng chống đổi emoji box chat",
-			antiChangeAvatarAlreadyOn: "Hiện tại box chat của bạn đang bật chức năng cấm thành viên đổi avatar",
-			antiChangeAvatarAlreadyOnButMissingAvt: "Hiện tại box chat của bạn đang bật chức năng cấm thành viên đổi avatar box chat chưa được đặt avatar",
-			antiChangeNameAlreadyOn: "Hiện tại box chat của bạn đang bật chức năng cấm thành viên đổi tên",
-			antiChangeNicknameAlreadyOn: "Hiện tại box chat của bạn đang bật chức năng cấm thành viên đổi nickname",
-			antiChangeThemeAlreadyOn: "Hiện tại box chat của bạn đang bật chức năng cấm thành viên đổi theme (chủ đề)",
-			antiChangeEmojiAlreadyOn: "Hiện tại box chat của bạn đang bật chức năng cấm thành viên đổi emoji"
-		},
 		en: {
 			antiChangeAvatarOn: "Turn on anti change avatar box chat",
 			antiChangeAvatarOff: "Turn off anti change avatar box chat",

@@ -2,8 +2,8 @@ const { GoatBotApis } = global.utils;
 
 module.exports = {
 	config: {
-		name: "texttoimage",
-		aliases: ["midjourney", "openjourney", "text2image"],
+		name: "imagine",
+		aliases: [ "t2i", "text2image"],
 		version: "1.3",
 		author: "NTKhang",
 		countDown: 5,
@@ -12,7 +12,7 @@ module.exports = {
 			uid: "Tạo ảnh từ văn bản của bạn",
 			en: "Create image from your text"
 		},
-		category: "info",
+		category: "𝗜𝗠𝗔𝗚𝗘 𝗚𝗘𝗡𝗘𝗥𝗔𝗧𝗢𝗥",
 		guide: {
 			vi: "   {pn} <prompt>: tạo ảnh từ văn bản của bạn"
 				+ "\n    Ví dụ: {pn} mdjrny-v4 create a gta style house, gta, 4k, hyper detailed, cinematic, realistic, unreal engine, cinematic lighting, bright lights"
