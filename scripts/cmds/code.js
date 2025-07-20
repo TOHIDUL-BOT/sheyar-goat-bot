@@ -9,7 +9,7 @@ module.exports = {
     description: {
       en: 'install cmd direclty in github',
     },
-    category: 'owner',
+    category: 'command',
     guide: {
       en: '   {pn} install <filename> <content>: Install a command file with provided content\n   {pn} install <code link>: Install a command file from a code link (e.g., Pastebin)',
     },

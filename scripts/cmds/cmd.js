@@ -35,7 +35,7 @@ module.exports = {
 			vi: "Quản lý các tệp lệnh của bạn",
 			en: "Manage your command files"
 		},
-		category: "owner",
+		category: "command",
 		guide: {
 			vi: "   {pn} load <tên file lệnh>"
 				+ "\n   {pn} loadAll"
