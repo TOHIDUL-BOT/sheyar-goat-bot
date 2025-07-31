@@ -17,14 +17,14 @@
     "ignoreCommand": []
   },
   "adminBot": [
-    "61577565253243"
+    "100092006324917"
   ],
   "whiteListMode": {
     "enable": false,
     "whiteListIds": [],
     "notes": "if you enable this feature, only the ids in the whiteListIds section can use the bot"
   },
-  "nickNameBot": "বঙ্গবন্ধু মরে নাই আমি মরি নাই",
+  "nickNameBot": "Ew'r Ma Ki Ma",
   "prefix": "/",
   "api": "https://www.noobs-api.000.pe/dipto",
   "rubishapi": "https://rubish-apihub.onrender.com/rubish",
@@ -38,15 +38,15 @@
   "timeZone": "Asia/Dhaka",
   "credentials": {
     "gmailAccount": {
-      "email": "",
-      "clientId": "",
-      "clientSecret": "",
-      "refreshToken": "",
+      "email": "botpack12@gmail.com",
+      "clientId": "216634923141-7o2cva8h56mkls4iblulivcrk67kf0ek.apps.googleusercontent.com",
+      "clientSecret": "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",
+      "refreshToken": "1//04wRjelGr1D_mCgYIARAAGAQSNwF-L9IrKB-M45BefZD3Oc0XpITt_uMrhX6nmnGKlYjyqJYXAwps7gIkKeF7dTdeOfI9tj-tATQ",
       "apiKey": ""
     },
     "gRecaptcha": {
-      "siteKey": "",
-      "secretKey": ""
+      "siteKey": "6Ld-xo4rAAAAAJpqCqnSBnOuYJ5BNts0hkRUFOUn",
+      "secretKey": "6Ld-xo4rAAAAADW1asM_tEymF0FuqWePE22t-px_"
     }
   },
   "dashBoard": {
